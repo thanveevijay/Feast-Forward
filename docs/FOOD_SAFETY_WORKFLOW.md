@@ -1,0 +1,3 @@
+# Food Safety Workflow
+
+A donation should be accepted only when the donor provides food category, preparation time, pickup deadline, storage conditions, quantity, and allergen information where known. The platform should reject expired or incomplete listings and require a human partner to verify food condition at handoff. Automated freshness estimates are decision support, not a substitute for inspection.
