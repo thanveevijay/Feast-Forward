@@ -68,8 +68,8 @@ Send this body to `POST /food` with the `Content-Type: application/json` header.
 
 This repository is an early-stage prototype, not a production-ready food-distribution service. In particular:
 
-- The current registration route stores the submitted password directly. Do not use real user credentials until password hashing and authentication are implemented.
-- The API currently enables CORS broadly and runs Flask with debug mode enabled. Restrict both before deployment.
+- Registration hashes passwords with Werkzeug before storing them. The prototype does not yet expose a login/token-authentication flow, so protected user sessions and authorization are not implemented.
+- The API currently enables CORS broadly. Restrict allowed origins before deployment; debug mode is disabled when the server is run directly.
 - The current backend exposes basic user, food, volunteer, and recipient records. AI matching, live delivery tracking, food-safety verification, and notification workflows are product goals, not capabilities implemented by the current Flask file.
 - Validate all input, handle duplicate emails and missing records, and add automated tests before using real data.
 
