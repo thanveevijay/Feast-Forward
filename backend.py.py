@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -5,9 +6,16 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
-CORS(app)
+allowed_origins = [
+    origin.strip()
+    for origin in os.environ.get("FEASTFORWARD_CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
+    if origin.strip()
+]
+CORS(app, resources={r"/*": {"origins": allowed_origins}})
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///feastforward.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+    "DATABASE_URL", "sqlite:///feastforward.db"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -97,6 +105,8 @@ def register():
         return jsonify({
             "error": "Provide name, email, role, and location. Password must contain at least 8 characters."
         }), 400
+    if "@" not in email or email.startswith("@") or email.endswith("@"):
+        return jsonify({"error": "Provide a valid email address."}), 400
 
     allowed_roles = {"provider", "volunteer", "recipient"}
     if role not in allowed_roles:
